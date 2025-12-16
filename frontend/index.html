@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Coding Doubt Solver</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #73d3f1;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 10px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    #output {
+      background: #111;
+      color: rgb(244, 249, 244);
+      padding: 10px;
+      min-height: 100px;
+      margin-top: 15px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<h1>AI Coding Doubt Solver</h1>
+
+<label><b>Question</b></label>
+<textarea id="question" placeholder="Ask your doubt..."></textarea>
+
+<label><b>Python Code</b></label>
+<textarea id="code" placeholder="Write your Python code here..."></textarea>
+
+<button onclick="runCode()">Run Code</button>
+<button onclick="askAI()">Ask AI</button>
+
+<h3>Output</h3>
+<pre id="output"></pre>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
