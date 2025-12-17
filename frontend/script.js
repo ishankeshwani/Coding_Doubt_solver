@@ -39,7 +39,7 @@ async function askAI() {
   showOutput("🤖 Thinking...");
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/api/ask", {
+    const res = await fetch("http://coding-doubt-solver.onrender.com/api/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question, code })
