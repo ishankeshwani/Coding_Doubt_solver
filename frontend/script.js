@@ -1,54 +1,28 @@
-let pyodide = null;
+const askBtn = document.getElementById("askBtn");
+const output = document.getElementById("output");
 
-// Load Pyodide silently
-async function initPyodide() {
-  pyodide = await loadPyodide();
-}
-initPyodide();
-
-function showOutput(text) {
-  document.getElementById("output").innerText = text;
-}
-
-// Run Python code
-async function runCode() {
-  const code = document.getElementById("code").value;
-  if (!code.trim()) {
-    showOutput("⚠️ Please enter some Python code.");
-    return;
-  }
-
-  try {
-    const result = await pyodide.runPythonAsync(code);
-    showOutput(result !== undefined ? result : "✅ Code executed successfully.");
-  } catch (err) {
-    showOutput("❌ Error:\n" + err);
-  }
-}
-
-// Ask AI (clean UI)
-async function askAI() {
+askBtn.addEventListener("click", async () => {
   const question = document.getElementById("question").value;
   const code = document.getElementById("code").value;
 
-  if (!question.trim()) {
-    showOutput("⚠️ Please enter a question.");
-    return;
-  }
-
-  showOutput("🤖 Thinking...");
+  output.innerText = "Thinking...";
 
   try {
-    const res = await fetch("http://coding-doubt-solver.onrender.com/api/ask", {
+    const res = await fetch("https://coding-doubt-solver.onrender.com/api/ask", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, code })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        question: question,
+        code: code
+      })
     });
 
     const data = await res.json();
-    showOutput(data.answer);
+    output.innerText = data.answer;
 
   } catch (err) {
-    showOutput("❌ Could not reach AI server.");
+    output.innerText = "Error connecting to AI server";
   }
-}
+});
