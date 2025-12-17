@@ -5,24 +5,30 @@ askBtn.addEventListener("click", async () => {
   const question = document.getElementById("question").value;
   const code = document.getElementById("code").value;
 
-  output.innerText = "Thinking...";
+  output.innerText = "⏳ Thinking...";
 
   try {
-    const res = await fetch("https://coding-doubt-solver.onrender.com/api/ask", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        question: question,
-        code: code
-      })
-    });
+    const response = await fetch(
+      "https://coding-doubt-solver.onrender.com/api/ask",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question: question,
+          code: code,
+        }),
+      }
+    );
 
-    const data = await res.json();
-    output.innerText = data.answer;
+    const data = await response.json();
 
-  } catch (err) {
-    output.innerText = "Error connecting to AI server";
+    // ✅ THIS IS THE KEY FIX
+    output.innerText = data.answer || "No response from AI";
+
+  } catch (error) {
+    console.error(error);
+    output.innerText = "❌ Could not reach AI server.";
   }
 });

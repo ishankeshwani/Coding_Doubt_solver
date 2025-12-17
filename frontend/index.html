@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>AI Coding Doubt Solver</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,7 +33,7 @@
 
     #output {
       background: #111;
-      color: rgb(244, 249, 244);
+      color: #f4f9f4;
       padding: 10px;
       min-height: 100px;
       margin-top: 15px;
@@ -40,6 +41,7 @@
     }
   </style>
 </head>
+
 <body>
 
 <h1>AI Coding Doubt Solver</h1>
@@ -50,8 +52,8 @@
 <label><b>Python Code</b></label>
 <textarea id="code" placeholder="Write your Python code here..."></textarea>
 
-<button onclick="runCode()">Run Code</button>
-<button onclick="askAI()">Ask AI</button>
+<button id="runBtn">Run Code</button>
+<button id="askBtn">Ask AI</button>
 
 <h3>Output</h3>
 <pre id="output"></pre>
