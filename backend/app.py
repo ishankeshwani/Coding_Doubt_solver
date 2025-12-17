@@ -1,32 +1,54 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from groq import Groq
-import os
+from dotenv import load_dotenv
 
-# Create FastAPI app
+# Load .env file
+load_dotenv()
+
+# Read environment variables
+PROVIDER = os.getenv("PROVIDER")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+# Initialize FastAPI
 app = FastAPI()
 
-# Allow frontend to talk to backend
+# ✅ CORS FIX (THIS SOLVES YOUR ISSUE)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # OK for college project
+    allow_origins=[
+        "https://codingdoubtsolver.netlify.app",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Read Groq API key from environment variable
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Initialize Groq client
+client = Groq(api_key=GROQ_API_KEY)
 
-# Data format coming from frontend
+# Request body model
 class AskRequest(BaseModel):
     question: str
     code: str
 
+# Health check (optional but useful)
+@app.get("/")
+def root():
+    return {"status": "Backend is running 🚀"}
+
+# Main AI endpoint
 @app.post("/api/ask")
-async def ask_ai(data: AskRequest):
+def ask_ai(data: AskRequest):
+    if PROVIDER != "GROQ":
+        return {"error": "Invalid provider"}
+
     prompt = f"""
-You are a helpful coding assistant.
+You are a helpful coding tutor.
 
 Question:
 {data.question}
@@ -34,14 +56,15 @@ Question:
 Code:
 {data.code}
 
-Explain the mistake clearly and provide corrected code.
+Explain clearly and simply.
 """
 
     response = client.chat.completions.create(
         model="llama3-8b-8192",
         messages=[
             {"role": "user", "content": prompt}
-        ]
+        ],
+        temperature=0.4
     )
 
     return {
