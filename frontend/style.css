@@ -115,3 +115,7 @@ button:hover {
     font-size: 13px;
   }
 }
+
+#runCodeContainer {
+  display: none;
+}
