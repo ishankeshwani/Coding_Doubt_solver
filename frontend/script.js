@@ -1,5 +1,3 @@
-const BACKEND_URL = "https://coding-doubt-solver.onrender.com/api/ask";
-
 async function askAI() {
   const question = document.getElementById("question").value;
   const code = document.getElementById("code").value;
@@ -8,44 +6,30 @@ async function askAI() {
   output.innerText = "Thinking...";
 
   try {
-    const response = await fetch(BACKEND_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        question: question,
-        code: code
-      })
-    });
+    const response = await fetch(
+      "https://coding-doubt-solver.onrender.com/api/ask",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ question, code })
+      }
+    );
 
-    if (!response.ok) {
-      throw new Error("Server error");
+    const data = await response.json();
+    console.log("Backend response:", data);
+
+    if (data.answer) {
+      output.innerText = data.answer;
+    } else if (data.error) {
+      output.innerText = "Backend error:\n" + data.error;
+    } else {
+      output.innerText = "Unexpected response from server.";
     }
 
-    const data = await response.json();   // 🔥 THIS WAS MISSING
-
-    output.innerText = data.answer;        // 🔥 NOW IT WORKS
-  }
-  catch (err) {
-    output.innerText = "❌ Could not reach AI server.";
+  } catch (err) {
     console.error(err);
-  }
-}
-
-async function runCode() {
-  const code = document.getElementById("code").value;
-  const output = document.getElementById("output");
-
-  try {
-    if (!window.pyodide) {
-      window.pyodide = await loadPyodide();
-    }
-
-    let result = await pyodide.runPythonAsync(code);
-    output.innerText = result ?? "Code executed.";
-  }
-  catch (err) {
-    output.innerText = err.toString();
+    output.innerText = "Could not reach AI server.";
   }
 }
