@@ -1,45 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Coding Doubt Solver</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="container">
-    <h1>AI Coding Doubt Solver</h1>
+<div class="container">
+  <h1>AI Coding Doubt Solver</h1>
 
-    <label>Question</label>
-    <textarea id="question" placeholder="Ask your coding doubt..."></textarea>
+  <label>Question</label>
+  <textarea id="question" placeholder="Ask your coding doubt..."></textarea>
 
-    <label>Language</label>
-    <select id="language">
-      <option>Python</option>
-      <option>Java</option>
-      <option>C</option>
-      <option>C++</option>
-    </select>
+  <label>Code</label>
+  <textarea id="code" placeholder="Paste your code here..."></textarea>
 
-    <label>Code</label>
-    <textarea id="code" placeholder="Paste your code here..."></textarea>
-
-    <label class="checkbox">
-      <input type="checkbox" id="lineByLine"> Explain line by line
-    </label>
-
-    <div class="buttons">
-      <button onclick="askAI()">Ask AI</button>
-      <button onclick="clearAll()">Clear</button>
-      <button onclick="copyOutput()">Copy</button>
-    </div>
-
-    <div id="loader" class="loader"></div>
-
-    <pre id="output"></pre>
+  <div class="btn-group">
+    <button onclick="runCode()">Run Code</button>
+    <button onclick="askAI()">Ask AI</button>
+    <button class="clear" onclick="clearAll()">Clear</button>
   </div>
 
-  <script src="script.js"></script>
+  <div id="loader" class="loader hidden"></div>
+
+  <h3>Output</h3>
+  <pre id="output"></pre>
+
+  <button class="copy hidden" onclick="copyOutput()">Copy Output</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

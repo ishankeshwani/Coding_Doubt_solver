@@ -1,43 +1,62 @@
-async function askAI() {
-  const output = document.getElementById("output");
-  const loader = document.getElementById("loader");
+let pyodideReady = false;
 
-  const question = document.getElementById("question").value;
+async function initPyodide() {
+  self.pyodide = await loadPyodide();
+  pyodideReady = true;
+}
+initPyodide();
+
+function showLoader(show) {
+  document.getElementById("loader").classList.toggle("hidden", !show);
+}
+
+function runCode() {
   const code = document.getElementById("code").value;
-  const language = document.getElementById("language").value;
-  const lineByLine = document.getElementById("lineByLine").checked;
+  const output = document.getElementById("output");
 
-  output.innerText = "";
-  loader.style.display = "block";
-
-  try {
-    const response = await fetch(
-      "https://coding-doubt-solver.onrender.com/api/ask",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, code, language, lineByLine })
-      }
-    );
-
-    const data = await response.json();
-    output.innerText = data.answer || data.error;
-
-  } catch {
-    output.innerText = "Could not reach AI server.";
+  if (!pyodideReady) {
+    output.textContent = "Loading Python...";
+    return;
   }
 
-  loader.style.display = "none";
+  try {
+    output.textContent = pyodide.runPython(code);
+  } catch (err) {
+    output.textContent = err;
+  }
+}
+
+async function askAI() {
+  const output = document.getElementById("output");
+  showLoader(true);
+  output.textContent = "";
+
+  const res = await fetch("https://coding-doubt-solver.onrender.com/api/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      question: document.getElementById("question").value,
+      code: document.getElementById("code").value
+    })
+  });
+
+  const data = await res.json();
+  showLoader(false);
+
+  output.textContent = data.answer || "No response";
+  document.querySelector(".copy").classList.remove("hidden");
 }
 
 function clearAll() {
   document.getElementById("question").value = "";
   document.getElementById("code").value = "";
-  document.getElementById("output").innerText = "";
+  document.getElementById("output").textContent = "";
+  document.querySelector(".copy").classList.add("hidden");
 }
 
 function copyOutput() {
-  const text = document.getElementById("output").innerText;
-  navigator.clipboard.writeText(text);
-  alert("Output copied!");
+  navigator.clipboard.writeText(
+    document.getElementById("output").textContent
+  );
+  alert("Copied to clipboard!");
 }
