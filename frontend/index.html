@@ -3,63 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <title>AI Coding Doubt Solver</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #73d3f1;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 10px;
-      margin-top: 10px;
-      font-family: monospace;
-      font-size: 14px;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin-top: 10px;
-      margin-right: 10px;
-      cursor: pointer;
-    }
-
-    #output {
-      background: #111;
-      color: #f4f9f4;
-      padding: 10px;
-      min-height: 100px;
-      margin-top: 15px;
-      white-space: pre-wrap;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-<h1>AI Coding Doubt Solver</h1>
+  <div class="container">
+    <h1>AI Coding Doubt Solver</h1>
 
-<label><b>Question</b></label>
-<textarea id="question" placeholder="Ask your doubt..."></textarea>
+    <label>Question</label>
+    <textarea id="question" placeholder="Ask your coding doubt..."></textarea>
 
-<label><b>Python Code</b></label>
-<textarea id="code" placeholder="Write your Python code here..."></textarea>
+    <label>Language</label>
+    <select id="language">
+      <option>Python</option>
+      <option>Java</option>
+      <option>C</option>
+      <option>C++</option>
+    </select>
 
-<button id="runBtn">Run Code</button>
-<button id="askBtn">Ask AI</button>
+    <label>Code</label>
+    <textarea id="code" placeholder="Paste your code here..."></textarea>
 
-<h3>Output</h3>
-<pre id="output"></pre>
+    <label class="checkbox">
+      <input type="checkbox" id="lineByLine"> Explain line by line
+    </label>
 
-<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-<script src="script.js"></script>
+    <div class="buttons">
+      <button onclick="askAI()">Ask AI</button>
+      <button onclick="clearAll()">Clear</button>
+      <button onclick="copyOutput()">Copy</button>
+    </div>
 
+    <div id="loader" class="loader"></div>
+
+    <pre id="output"></pre>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
