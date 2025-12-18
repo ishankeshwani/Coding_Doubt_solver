@@ -5,22 +5,15 @@ from pydantic import BaseModel
 from groq import Groq
 from dotenv import load_dotenv
 
-# Load env variables
 load_dotenv()
 
-PROVIDER = os.getenv("PROVIDER")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 app = FastAPI()
 
-# ✅ CORS (CORRECT)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://codingdoubtsolver.netlify.app",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,11 +31,9 @@ def root():
 
 @app.post("/api/ask")
 def ask_ai(data: AskRequest):
-    if PROVIDER != "GROQ":
-        return {"error": "Invalid provider"}
-
-    prompt = f"""
-You are a helpful coding tutor.
+    try:
+        prompt = f"""
+You are a helpful coding assistant.
 
 Question:
 {data.question}
@@ -50,15 +41,16 @@ Question:
 Code:
 {data.code}
 
-Explain clearly and simply.
+Explain the issue clearly and suggest a fix.
 """
 
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",  # ✅ FIXED MODEL
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.4,
-    )
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.4,
+        )
 
-    return {
-        "answer": response.choices[0].message.content
-    }
+        return {"answer": response.choices[0].message.content}
+
+    except Exception as e:
+        return {"error": str(e)}
