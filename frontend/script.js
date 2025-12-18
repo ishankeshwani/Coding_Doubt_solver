@@ -1,9 +1,10 @@
+const output = document.getElementById("output");
+
 async function askAI() {
+  output.innerText = "Thinking... 🤔";
+
   const question = document.getElementById("question").value;
   const code = document.getElementById("code").value;
-  const output = document.getElementById("output");
-
-  output.innerText = "Thinking...";
 
   try {
     const response = await fetch(
@@ -13,23 +14,20 @@ async function askAI() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ question, code })
+        body: JSON.stringify({
+          question: question,
+          code: code
+        })
       }
     );
 
     const data = await response.json();
-    console.log("Backend response:", data);
 
-    if (data.answer) {
-      output.innerText = data.answer;
-    } else if (data.error) {
-      output.innerText = "Backend error:\n" + data.error;
-    } else {
-      output.innerText = "Unexpected response from server.";
-    }
+    // ✅ THIS IS THE KEY FIX
+    output.innerText = data.answer || "No response from AI.";
 
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     output.innerText = "Could not reach AI server.";
+    console.error(error);
   }
 }
